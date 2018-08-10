@@ -1,0 +1,15 @@
+## 公共配置信息
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 60
+  server:
+    eviction-interval-timer-in-ms: 10000
+    enable-self-preservation: false
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://plutus:plutus@localhost:8761/eureka/
