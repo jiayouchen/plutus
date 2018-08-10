@@ -1,0 +1,21 @@
+server:
+  port: 9999
+  tomcat:
+    max-threads: 800
+    accept-count: 800
+    max-connections: 1000
+  servlet:
+    context-path: /user
+
+info:
+  build:
+    artifact: @project.artifactId@
+    name: @project.name@
+    description: @project.description@
+    version: @project.version@
+    environment: ${spring.profiles.active}
+spring:
+  profiles:
+    active: dev
+  application:
+    name: ${info.build.artifact}-${spring.profiles.active}
