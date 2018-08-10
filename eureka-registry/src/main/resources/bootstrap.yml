@@ -5,7 +5,14 @@ server:
     accept-count: 800
     max-connections: 1000
   servlet:
-    context-path: /eureka
+    context-path: /
+
+#security:
+#  basic:
+#    enabled: true
+#  user:
+#    name: plutus
+#    password: plutus
 
 info:
   build:
