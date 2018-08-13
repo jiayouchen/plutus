@@ -87,6 +87,8 @@
             <groupId>crd.greece.plutus</groupId>
             <artifactId>user-client</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>D:/java/repository/crd/greece/plutus/user-client/0.0.1-SNAPSHOT/user-client-0.0.1-SNAPSHOT.jar</systemPath>
         </dependency>
     </dependencies>
 
@@ -109,7 +111,6 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
-
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

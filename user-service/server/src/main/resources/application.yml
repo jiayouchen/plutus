@@ -36,6 +36,20 @@ spring:
     filters: stat,wall,slf4j
     # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  mail:
+    #字符集
+    default-encoding: UTF-8
+    #电子邮件地址
+    host: smtp.163.com
+    #邮箱账号名
+    username: AnynoteWebmasters
+    #授权密码
+    password:
+    #邮箱服务器默认端口
+    port: 25
+    protocol: smtp
+
+
 
 # mybatis config
 mybatis:
