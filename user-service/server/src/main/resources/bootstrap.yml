@@ -19,3 +19,12 @@ spring:
     active: dev
   application:
     name: ${info.build.artifact}-${spring.profiles.active}
+
+## Swagger configuration
+swagger:
+  enabled: true
+  title: ${info.build.name}
+  description: ${info.build.description}
+  version: ${info.build.version}
+  base-package: crd.greece.plutus.user.biz.service
+  base-path: /**

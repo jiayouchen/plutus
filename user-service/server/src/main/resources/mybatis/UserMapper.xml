@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="crd.greece.plutus.user.biz.dao.UserDao">
+
+    <insert id="insert" parameterType="crd.greece.plutus.user.domain.UserDomain">
+        INSERT INTO `tb_user`(
+          `id`,
+          `name`,
+          `email`,
+          `password`,
+          `phone`,
+          `enable`
+        )
+        VALUES (
+          (SELECT REPLACE(UUID(), '-', '') AS id),
+          #{name},
+          #{email},
+          #{password},
+          #{phone},
+          #{enable}
+        )
+    </insert>
+
+</mapper>
