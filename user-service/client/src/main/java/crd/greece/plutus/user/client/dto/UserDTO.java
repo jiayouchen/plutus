@@ -29,7 +29,7 @@ import java.io.Serializable;
 @ApiModel(description = "用户对象")
 public class UserDTO implements Serializable{
 
-    private String id;
+    private Long id;
 
     /**
      * 用户名

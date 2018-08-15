@@ -5,7 +5,6 @@
 
     <insert id="insert" parameterType="crd.greece.plutus.user.domain.UserDomain">
         INSERT INTO `tb_user`(
-          `id`,
           `name`,
           `email`,
           `password`,
@@ -13,7 +12,6 @@
           `enable`
         )
         VALUES (
-          (SELECT REPLACE(UUID(), '-', '') AS id),
           #{name},
           #{email},
           #{password},
@@ -21,5 +19,28 @@
           #{enable}
         )
     </insert>
+
+    <select id="selectByEmail" parameterType="java.lang.String" resultType="crd.greece.plutus.user.domain.UserDomain">
+        SELECT * FROM `tb_user` WHERE `email` = #{email};
+    </select>
+
+    <update id="update" parameterType="crd.greece.plutus.user.domain.UserDomain">
+        UPDATE `tb_user`
+        <set>
+            <if test="name != null and name != ''">
+                `name` = #{name},
+            </if>
+            <if test="email != null and email != ''">
+                `email` = #{email},
+            </if>
+            <if test="phone != null and phone != ''">
+                `phone` = #{phone},
+            </if>
+            <if test="enable != null">
+                `enable` = #{enable},
+            </if>
+        </set>
+        WHERE `id` = #{id}
+    </update>
 
 </mapper>

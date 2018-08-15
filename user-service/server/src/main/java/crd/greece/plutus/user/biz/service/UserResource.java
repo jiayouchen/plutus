@@ -17,8 +17,6 @@ import crd.greece.plutus.user.client.dto.UserDTO;
 import crd.greece.plutus.user.common.Constants;
 import crd.greece.plutus.user.domain.UserDomain;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
@@ -28,9 +26,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.util.DigestUtils;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -48,24 +45,28 @@ public class UserResource implements UserClient {
 
     @Autowired
     private UserDao userDao;
-
     @Autowired
     private JavaMailSender jms;
 
     @Value("${spring.mail.username}")
     private String fromEmail;
-
     @Value("${spring.mail.host}")
     private String host;
+    @Value("${plutus.self-regist-switch}")
+    private Boolean selfRegistSwitch;
 
     @Override
-    @ApiOperation(value = "用户注册", notes = "用户注册")
-    @ApiImplicitParam(name = "userDTO", value = "用户对象", paramType = "body", dataType = "UserDTO", required = true)
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseJson register(@RequestBody UserDTO userDTO){
 
         ResponseJson responseJson = new ResponseJson();
+
         try{
+            if (!selfRegistSwitch){
+                responseJson.setSuccess(Boolean.FALSE);
+                responseJson.setMsg("注册功能未开放，请联系管理员");
+                return responseJson;
+            }
+
             UserDomain domain = new UserDomain();
             BeanUtils.copyProperties(userDTO, domain);
             //设置密码
@@ -82,6 +83,12 @@ public class UserResource implements UserClient {
         }
 
         return responseJson;
+    }
+
+    @Override
+    public ResponseJson active(@PathVariable("activeCode") String activeCode) {
+
+        return null;
     }
 
     /**

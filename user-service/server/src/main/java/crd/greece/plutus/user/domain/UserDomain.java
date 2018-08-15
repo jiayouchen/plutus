@@ -37,7 +37,7 @@ public class UserDomain implements Serializable {
      * 主键
      */
     @NotNull
-    private String id;
+    private Long id;
 
     /**
      * 用户名

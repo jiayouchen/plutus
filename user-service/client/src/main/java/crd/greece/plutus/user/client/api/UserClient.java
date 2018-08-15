@@ -15,6 +15,7 @@ import crd.greece.plutus.user.client.dto.UserDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,5 +34,10 @@ public interface UserClient {
     @ApiImplicitParam(name = "userDTO", value = "用户对象", paramType = "body", dataType = "UserDTO", required = true)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     ResponseJson register(@RequestBody UserDTO userDTO);
+
+    @ApiOperation(value = "账户激活", notes = "账户激活")
+    @ApiImplicitParam(name = "activeCode", value = "激活码", paramType = "path", dataType = "string", required = true)
+    @RequestMapping(value = "/active/{activeCode}", method = RequestMethod.GET)
+    ResponseJson active(@PathVariable("activeCode") String activeCode);
 
 }

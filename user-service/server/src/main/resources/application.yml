@@ -49,11 +49,13 @@ spring:
     port: 25
     protocol: smtp
 
-
-
 # mybatis config
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
   mapper-locations: classpath:mybatis/**/*Mapper.xml
   type-aliases-package: crd.greece.plutus.user.domain
+
+# 自定义配置
+plutus:
+  self-regist-switch: false

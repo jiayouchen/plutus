@@ -25,4 +25,8 @@ public interface UserDao {
 
     int insert(UserDomain userDomain);
 
+    UserDomain selectByEmail(String email);
+
+    int update(UserDomain userDomain);
+
 }
