@@ -8,3 +8,43 @@ eureka:
       enabled: true
     service-url:
       defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+spring:
+  mvc:
+    static-path-pattern: /static/**
+  resources:
+    static-locations: classpath:/templates/,classpath:/static/,classpath:/public/
+  thymeleaf:
+    mode: HTML5
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  devtools:
+    restart:
+      enabled: true
+
+zuul:
+  host:
+    connect-timeout-millis: 3000
+    socket-timeout-millis: 5000
+  retryable: true
+  ribbon-isolation-strategy: thread
+  thread-pool:
+    use-separate-thread-pools: true
+    thread-pool-key-prefix: crd
+  ignored-services: "*"
+  routes:
+    USER-API:
+      path: /user/**
+      serviceId: user-service-${spring.profiles.active}
+    STOCK-API:
+      path: /stock/**
+      serviceId: stock-service-${spring.profiles.active}
+
+

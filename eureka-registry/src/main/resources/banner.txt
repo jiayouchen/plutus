@@ -6,3 +6,8 @@
 | (      | |      | |   | |   | |   | |   | |      ) |
 | )      | (____/\| (___) |   | |   | (___) |/\____) |
 |/       (_______/(_______)   )_(   (_______)\_______)
+
+Application Name   : ${spring.application.name}${application.formatted-version}
+Application Version: ${info.build.version}${application.formatted-version}
+Spring Boot Version: ${spring-boot.version}${spring-boot.formatted-version}
+====================================================
