@@ -10,6 +10,10 @@
  */
 package crd.greece.plutus.user.biz.service;
 
+import com.google.common.base.Strings;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalNotification;
 import crd.greece.plutus.user.biz.dao.UserDao;
 import crd.greece.plutus.user.client.api.UserClient;
 import crd.greece.plutus.user.client.common.ResponseJson;
@@ -30,6 +34,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author chenjiayou022
  * @description TODO
@@ -42,6 +48,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Api(value = "User Api", description = "用户 API", protocols = "application/json")
 public class UserResource implements UserClient {
+
+    private static final Integer MAXIMUM_SIZE = 5;
+    private static final Integer INITIAL_CAPACITY = 3;
+
+    private final Cache<String,Object> cache = buildCache(MAXIMUM_SIZE, INITIAL_CAPACITY);
 
     @Autowired
     private UserDao userDao;
@@ -87,8 +98,20 @@ public class UserResource implements UserClient {
 
     @Override
     public ResponseJson active(@PathVariable("activeCode") String activeCode) {
+        ResponseJson json = new ResponseJson();
 
-        return null;
+        String email = (String) cache.getIfPresent(activeCode);
+        if (!Strings.isNullOrEmpty(email)){
+            UserDomain domain = userDao.selectByEmail(email);
+
+            domain.setEnable(Boolean.TRUE);
+
+            userDao.update(domain);
+
+            json.setMsg("账户激活成功");
+        }
+
+        return json;
     }
 
     /**
@@ -98,6 +121,11 @@ public class UserResource implements UserClient {
      */
     private String sendActiveMail(String toMail) throws Exception {
         String from = fromEmail + "@" + host.substring(host.indexOf(".") + 1);
+
+        //缓存验证码
+        String random = RandomStringUtils.random(32, Constants.SYSTEM_RANDOM_STRING);
+        cache.put(random, toMail);
+
         //用于封装邮件信息的实例
         SimpleMailMessage smm = new SimpleMailMessage();
         //由谁来发送邮件
@@ -105,7 +133,7 @@ public class UserResource implements UserClient {
         //邮件主题
         smm.setSubject("Plutus账号激活邮件");
         //邮件内容
-        smm.setText(genValidateUrl());
+        smm.setText(initValidateUrl(random));
         //接受邮件
         smm.setTo(toMail);
         try {
@@ -117,10 +145,33 @@ public class UserResource implements UserClient {
         return "注册成功！请尽快登录[" + toMail + "]激活您的账号！";
     }
 
-    private String genValidateUrl(){
-        String random = RandomStringUtils.random(32, Constants.SYSTEM_RANDOM_STRING);
+    private String initValidateUrl(String random){
         StringBuffer sb = new StringBuffer("http://www.plutus.crd/")
                 .append("user/active/").append(random);
         return sb.toString();
+    }
+
+    /**
+     *
+     * @param maximumSize
+     * @param initialCapacity
+     * @return
+     */
+    private Cache<String, Object> buildCache(int maximumSize, int initialCapacity){
+        return CacheBuilder.newBuilder().maximumSize(maximumSize)
+                .expireAfterWrite(3, TimeUnit.MINUTES)
+//                .expireAfterWrite(30, TimeUnit.MINUTES)
+                .initialCapacity(initialCapacity)
+                .removalListener((RemovalNotification<String, Object> rn) -> deleteUser( rn))
+                .build();
+    }
+
+    /**
+     *
+     * @param rn
+     */
+    private void deleteUser(RemovalNotification<String, Object> rn){
+        String email = (String) rn.getValue();
+        userDao.delete(email);
     }
 }

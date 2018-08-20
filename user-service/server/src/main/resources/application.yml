@@ -44,7 +44,7 @@ spring:
     #邮箱账号名
     username: AnynoteWebmasters
     #授权密码
-    password:
+    password: Anynotemaster001
     #邮箱服务器默认端口
     port: 25
     protocol: smtp
@@ -58,4 +58,4 @@ mybatis:
 
 # 自定义配置
 plutus:
-  self-regist-switch: false
+  self-regist-switch: true

@@ -43,4 +43,7 @@
         WHERE `id` = #{id}
     </update>
 
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM `tb_user` WHERE `enable` = 0 AND `email` = #{email}
+    </delete>
 </mapper>

@@ -8,26 +8,17 @@
  * you entered into with Founder.
  *
  */
-package crd.greece.plutus.user.biz.dao;
-
-import crd.greece.plutus.user.domain.UserDomain;
-import org.mapstruct.Mapper;
+package crd.greece.plutus.user.client;
 
 /**
  * @author chenjiayou022
  * @description TODO
- * @date 2018/8/8 12:41
+ * @date 2018/8/16 21:42
  * @slogon 站在巨人的肩膀上
  * @since 1.0.0
  */
-@Mapper
-public interface UserDao {
-
-    int insert(UserDomain userDomain);
-
-    UserDomain selectByEmail(String email);
-
-    int update(UserDomain userDomain);
-
-    int delete(String email);
+public interface AppServiceDefine {
+    String APP_SERVICE_NAME = "user-service-${spring.profiles.active}";
+//    String API_SERVER_PREFIX = "/server";
+//    String API_WEBAPI_PREFIX = "/api";
 }
