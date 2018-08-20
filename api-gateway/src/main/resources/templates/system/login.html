@@ -62,18 +62,15 @@
 		</div><div class="copyrights"></div>
 		<div class="register w3layouts agileits">
 			<h2>注 册</h2>
-			<form action="user/register" method="post" id="registerForm">
+			<form action="#" method="post" id="registerForm" onsubmit="return checkForm();">
 				<input type="text" name="name" placeholder="用户名" required="true"/>
 				<input type="text" name="email" placeholder="邮箱" required="true"/>
 				<input type="password" name="password" placeholder="密码" required="true"/>
 				<input type="text" name="phone" placeholder="手机号码" required="true"/>
-				<!--<input type="submit" value="免费注册" onclick="register();"/>-->
+				<div class="send-button w3layouts agileits">
+					<input type="submit" value="免费注册"/>
+				</div>
 			</form>
-			<div class="send-button w3layouts agileits">
-				<form onsubmit="return false">
-					<input type="submit" value="免费注册" onclick="register();"/>
-				</form>
-			</div>
 			<div class="clear"></div>
 		</div>
 		<div class="clear"></div>
@@ -85,8 +82,17 @@
 <!-- //Body -->
 </html>
 <script type="text/javascript">
-	function register() {
+	function checkForm() {
+	    //注册
+        ajaxRegister();
+
+	    return false;
+    }
+	
+	function ajaxRegister() {
+
         // var token = getCookie("token");
+
         $.ajax({
             type: "POST",
             url: "user/register",

@@ -42,6 +42,7 @@ public class DefaultView implements WebMvcConfigurer {
                 .excludePathPatterns(new String[]{
                         "/",
                         "/login",
+                        "/register",
                         "/error",
                         "/static/**"
                 });

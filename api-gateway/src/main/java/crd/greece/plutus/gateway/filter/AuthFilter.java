@@ -68,20 +68,19 @@ public class AuthFilter extends ZuulFilter {
         RequestContext context = RequestContext.getCurrentContext();
         HttpServletRequest request = context.getRequest();
 
-        Cookie token = WebUtils.getCookie(request, "token");
-        System.out.println(token);
-
+//        Cookie token = WebUtils.getCookie(request, "token");
+//        System.out.println(token);
 
         // 2. 验证Token的合法性
-        String tokenString = request.getHeader("token");
-        System.out.println(tokenString);
+//        String tokenString = request.getHeader("token");
+//        System.out.println(tokenString);
 
-        HttpServletResponse response = context.getResponse();
-        Cookie cookie = new Cookie("token", "token_test");
-        cookie.setPath("/");
-        cookie.setHttpOnly(false);
-
-        response.addCookie(cookie);
+//        HttpServletResponse response = context.getResponse();
+//        Cookie cookie = new Cookie("token", "token_test");
+//        cookie.setPath("/");
+//        cookie.setHttpOnly(false);
+//
+//        response.addCookie(cookie);
         return null;
     }
 }
