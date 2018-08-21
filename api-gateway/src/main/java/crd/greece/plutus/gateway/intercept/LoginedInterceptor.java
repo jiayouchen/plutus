@@ -10,11 +10,13 @@
  */
 package crd.greece.plutus.gateway.intercept;
 
-import crd.greece.plutus.gateway.common.UserContext;
-import crd.greece.plutus.user.client.dto.UserDTO;
+import com.google.common.base.Strings;
+import crd.greece.plutus.gateway.common.TokenContext;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.WebUtils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -29,10 +31,19 @@ public class LoginedInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        UserDTO user = UserContext.getUser();
-        if (user == null) {
-            response.sendRedirect("/login");
-            return false;
+
+        String token = TokenContext.getToken();
+
+        if (Strings.isNullOrEmpty(token)) {
+            Cookie cookie = WebUtils.getCookie(request, "token");
+            token = cookie.getValue();
+            if (!Strings.isNullOrEmpty(token)){
+                //设置
+                TokenContext.setToken(token);
+            } else {
+                response.sendRedirect("/login");
+                return false;
+            }
         }
         return true;
     }
