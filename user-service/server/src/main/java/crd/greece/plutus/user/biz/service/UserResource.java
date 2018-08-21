@@ -14,12 +14,15 @@ import com.google.common.base.Strings;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalNotification;
+import com.google.common.collect.Maps;
 import crd.greece.plutus.user.biz.dao.UserDao;
 import crd.greece.plutus.user.client.api.UserClient;
 import crd.greece.plutus.user.client.common.ResponseJson;
 import crd.greece.plutus.user.client.dto.UserDTO;
 import crd.greece.plutus.user.common.Constants;
 import crd.greece.plutus.user.domain.UserDomain;
+import crd.greece.plutus.user.support.JWTParam;
+import crd.greece.plutus.user.utils.JavaWebTokenUtils;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.RandomStringUtils;
@@ -34,6 +37,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -112,6 +117,69 @@ public class UserResource implements UserClient {
         }
 
         return json;
+    }
+
+    @Override
+    public ResponseJson login(@RequestBody UserDTO userDTO) {
+        ResponseJson json = new ResponseJson(Boolean.TRUE);
+        //登录密码
+        String password = DigestUtils.md5DigestAsHex(userDTO.getPassword().getBytes());
+
+        UserDomain userDomain = userDao.selectByEmail(userDTO.getEmail());
+        if (null == userDomain){
+            json.setSuccess(Boolean.FALSE);
+            json.setMsg("账号不存在");
+            return json;
+        } else if (!userDomain.getEnable()){
+            json.setSuccess(Boolean.FALSE);
+            json.setMsg("账号未激活，请先激活账号");
+            return json;
+        } else if (!password.equals(userDomain.getPassword())){
+            json.setSuccess(Boolean.FALSE);
+            json.setMsg("账号或密码不正确");
+            return json;
+        }
+
+        //创建token
+        Map<String, Object> resultMap = onLogin(userDomain);
+
+        json.setMsg("登录成功");
+        json.setAttributes(resultMap);
+
+        return json;
+    }
+
+    /**
+     * 
+     * @param ud
+     * @return
+     */
+    private Map<String, Object> onLogin(UserDomain ud){
+        Map<String, Object> result = Maps.newHashMap();
+
+        String jwtId = UUID.randomUUID().toString();
+
+        Map<String, Object> claims = Maps.newHashMap();
+        claims.put("email", ud.getEmail());
+        claims.put("name", ud.getName());
+
+        JWTParam param = JWTParam.builder()
+                .id(jwtId)
+                .issuer(Constants.ISSUER)
+                .subject(Constants.SUBJECT)
+                .ttlMillis(Constants.TTLMILLIS)
+                .key(Constants.SECRET_KEY)
+                .claims(claims)
+                .build();
+
+        String token = JavaWebTokenUtils.createJWT(param);
+        cache.put(jwtId, token);
+
+        result.put("tokenName", Constants.TOKEN_COOKIE);
+        result.put("tokenValue", token);
+        result.put("expireTime", Constants.TTLMILLIS);
+
+        return result;
     }
 
     /**

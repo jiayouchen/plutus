@@ -21,4 +21,15 @@ public class Constants {
 
     public static final String SYSTEM_RANDOM_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
+    //=================================认证相关=================================
+    public static final String TOKEN_COOKIE = "token";
+
+    public static final String ISSUER = "plutus-user-service";
+
+    public static final String SUBJECT = "user-auth";
+
+    public static final Integer TTLMILLIS = 30 * 60 * 1000;
+
+    public static final String SECRET_KEY = "p@55w0rd";
+
 }

@@ -35,4 +35,9 @@ public class UserClientFallBack implements UserClient {
     public ResponseJson active(@PathVariable("activeCode") String activeCode) {
         return null;
     }
+
+    @Override
+    public ResponseJson login(@RequestBody UserDTO userDTO) {
+        return null;
+    }
 }

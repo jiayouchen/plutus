@@ -40,4 +40,9 @@ public interface UserClient {
     @RequestMapping(value = "/active/{activeCode}", method = RequestMethod.GET)
     ResponseJson active(@PathVariable("activeCode") String activeCode);
 
+    @ApiOperation(value = "用户登录", notes = "用户登录")
+    @ApiImplicitParam(name = "userDTO", value = "用户对象", paramType = "body", dataType = "UserDTO", required = true)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    ResponseJson login(@RequestBody UserDTO userDTO);
+
 }
